@@ -163,3 +163,19 @@ FROM post p
 		ON c.id = h.category_id
 	GROUP BY p.id
 ORDER BY p.datecreate ASC;
+
+# Articles sur page d'accueil
+SELECT p.id AS idpost, p.title AS titlepost, LEFT(p.content,255) AS contentshort, p.datecreate,
+	u.id AS iduser, u.userscreen,
+	GROUP_CONCAT(c.id) AS idcategory, 
+	GROUP_CONCAT(c.title SEPARATOR '||0||') AS titlecategory 
+FROM post p
+INNER JOIN user u
+		ON u.id = p.user_id
+	LEFT JOIN category_has_post h
+		ON p.id = h.post_id
+    LEFT JOIN category c
+		ON c.id = h.category_id
+	WHERE p.visible = 1 
+ GROUP BY p.id
+ ORDER BY datecreate DESC;
